@@ -1,31 +1,39 @@
-name: .NET Core Console CI
+name: .NET CI
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 jobs:
   build-and-test:
-    name: build-and-test-${{matrix.os}}
+    name: Build and Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     env:
-      Solution_Name: TestCases.sln
-      Test_Project_Path: TestProject1/TestProject1.csproj
+      Solution_Name: 'Blazor Lab Starter Code.sln'
+      Test_Project_Path: 'LibApp.tests/LibApp.tests.csproj'
+
     steps:
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v4
-    - name: Install .NET Core
+
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '6.0.x'
-    - name: Restore NuGet packages
-      run: dotnet restore ${{ env.Solution_Name }}
-    - name: Build solution
-      run: dotnet build ${{ env.Solution_Name }} --configuration Release --no-restore
-    - name: Test and publish results
-      run: |
-        dotnet test ${{ env.Test_Project_Path }} --no-restore --verbosity normal
+
+    - name: Restore Packages
+      run: dotnet restore "${{ env.Solution_Name }}"
+
+    - name: Build Solution
+      run: dotnet build "${{ env.Solution_Name }}" --configuration Release --no-restore
+
+    - name: Run Unit Tests
+      run: dotnet test "${{ env.Test_Project_Path }}" --no-restore --verbosity normal
+
