@@ -75,7 +75,7 @@ namespace Blazor_Lab_Starter_Code
             {
                 var fields = line.Split(',');
 
-                if (fields.Length >= 3)
+                if (fields.Length >= 5)
                 {
                     var user = new User
                     {
